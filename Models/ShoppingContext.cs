@@ -10,21 +10,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace TaskAuthenticationAuthorization.Models
 {
-    public interface IShoppingContext
-    {
-        DbSet<Product> Products { get; set; }
-        DbSet<Customer> Customers { get; set; }
-        DbSet<SuperMarket> SuperMarkets { get; set; }
-        DbSet<Order> Orders { get; set; }
-        DbSet<OrderDetail> OrderDetails { get; set; }
-        DbSet<User> Users { get; set; }
-        DbSet<Role> Roles { get; set; }
-
-        EntityEntry Add([NotNull] object entity);
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
-        EntityEntry Update([NotNull] object entity);
-    }
-    public class ShoppingContext : DbContext, IShoppingContext
+    public class ShoppingContext : DbContext
     {
         public const string ADMIN_ROLE_NAME = "admin";
         public const string BUYER_ROLE_NAME = "buyer";

@@ -12,9 +12,9 @@ namespace TaskAuthenticationAuthorization.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly IShoppingContext _context;
+        private readonly ShoppingContext _context;
 
-        public ProductsController(IShoppingContext context)
+        public ProductsController(ShoppingContext context)
         {
             _context = context;
         }

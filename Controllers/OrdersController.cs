@@ -13,9 +13,9 @@ namespace TaskAuthenticationAuthorization.Controllers
     [Authorize]
     public class OrdersController : Controller
     {
-        private readonly IShoppingContext _context;
+        private readonly ShoppingContext _context;
 
-        public OrdersController(IShoppingContext context)
+        public OrdersController(ShoppingContext context)
         {
             _context = context;
         }

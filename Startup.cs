@@ -28,7 +28,7 @@ namespace TaskAuthenticationAuthorization
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<IShoppingContext, ShoppingContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<ShoppingContext>(options => options.UseSqlServer(connection));
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => //CookieAuthenticationOptions
                 {
