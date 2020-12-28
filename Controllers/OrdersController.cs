@@ -24,7 +24,8 @@ namespace TaskAuthenticationAuthorization.Controllers
         public async Task<IActionResult> Index()
         {
             var shoppingContext = _context.Orders.Include(o => o.Customer).Include(o => o.SuperMarket)
-               .Where(o => User.IsInRole(ShoppingContext.BUYER_ROLE_NAME) ?  o.Customer.User.Login == User.Identity.Name : true);
+               .Where(o => User.IsInRole(ShoppingContext.ADMIN_ROLE_NAME) || 
+                           User.IsInRole(ShoppingContext.BUYER_ROLE_NAME) && o.Customer.User.Login == User.Identity.Name);
             return View(await shoppingContext.ToListAsync());
         }
 

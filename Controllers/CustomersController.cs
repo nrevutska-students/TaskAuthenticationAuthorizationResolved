@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TaskAuthenticationAuthorization.Models;
 
@@ -35,23 +33,13 @@ namespace TaskAuthenticationAuthorization.Controllers
                 customers = customers.Where(s => s.LastName.Contains(searchString)
                                        || s.FirstName.Contains(searchString));
             }
-            switch (sortOrder)
+            customers = sortOrder switch
             {
-                case "name_desc":
-                    customers = customers.OrderByDescending(s => s.LastName);
-                    break;
-                case "Address":
-                    customers = customers.OrderBy(s => s.Address);
-                    break;
-                case "address_desc":
-                    customers = customers.OrderByDescending(s => s.Address);
-                    break;
-                default:
-                    customers = customers.OrderBy(s => s.LastName);
-                    break;
-
-            }
-
+                "name_desc" => customers.OrderByDescending(s => s.LastName),
+                "Address" => customers.OrderBy(s => s.Address),
+                "address_desc" => customers.OrderByDescending(s => s.Address),
+                _ => customers.OrderBy(s => s.LastName),
+            };
             return View(await customers.AsNoTracking().ToListAsync());
         }
 

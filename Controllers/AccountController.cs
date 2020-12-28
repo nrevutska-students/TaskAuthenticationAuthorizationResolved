@@ -14,7 +14,7 @@ namespace TaskAuthenticationAuthorization.Controllers
 {
     public class AccountController : Controller
     {
-        private ShoppingContext db;
+        private readonly ShoppingContext db;
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -25,7 +25,12 @@ namespace TaskAuthenticationAuthorization.Controllers
                 if (user == null)
                 {
                     // adding user to DB
-                    user = new User {Login = model.Login, Password = model.Password, Role = db.Roles.FirstOrDefault(role => role.Name == ShoppingContext.BUYER_ROLE_NAME)};
+                    user = new User
+                    {
+                        Login = model.Login, 
+                        Password = model.Password, 
+                        Role = db.Roles.FirstOrDefault(role => role.Name == ShoppingContext.BUYER_ROLE_NAME)
+                    };
                     db.Users.Add(user);
                     await db.SaveChangesAsync();
 
@@ -66,9 +71,15 @@ namespace TaskAuthenticationAuthorization.Controllers
                 new Claim("buyerType", user.BuyerType.ToString())
             };
             // creating ClaimsIdentity object
-            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+            ClaimsIdentity id = new ClaimsIdentity(
+                claims, 
+                "ApplicationCookie", 
+                ClaimsIdentity.DefaultNameClaimType, 
+                ClaimsIdentity.DefaultRoleClaimType);
             // setting authenticational cookies
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(id));
         }
 
         public async Task<IActionResult> Logout()
@@ -83,18 +94,18 @@ namespace TaskAuthenticationAuthorization.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await db.Users.Include(user => user.Role).FirstOrDefaultAsync(u => u.Login == model.Login && u.Password == model.Password);
+                User user = await db.Users.Include(user => user.Role)
+                    .FirstOrDefaultAsync(u => u.Login == model.Login && u.Password == model.Password);
                 if (user != null)
                 {
                     await Authenticate(user); // authentication
-
                     return RedirectToAction("Index", "Home");
                 }
+
                 ModelState.AddModelError("", "Incorrect login and(or) password");
             }
+
             return View(model);
         }
-
-
     }
 }
