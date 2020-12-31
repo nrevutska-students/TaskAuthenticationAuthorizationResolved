@@ -76,6 +76,13 @@ namespace TaskAuthenticationAuthorization.Controllers
         {
             if (ModelState.IsValid)
             {
+                var currentUser = _context.Users.FirstOrDefault(user => user.Login == User.Identity.Name);
+                if (currentUser == null)
+                {
+                    return Unauthorized();
+                }
+
+                customer.UserId = currentUser.Id;
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
