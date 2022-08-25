@@ -23,10 +23,10 @@ namespace TaskAuthenticationAuthorization.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var shoppingContext = _context.Orders.Include(o => o.Customer).Include(o => o.SuperMarket)
+            var orders = _context.Orders.Include(o => o.Customer).Include(o => o.SuperMarket)
                .Where(o => User.IsInRole(ShoppingContext.ADMIN_ROLE_NAME) || 
                            User.IsInRole(ShoppingContext.BUYER_ROLE_NAME) && o.Customer.User.Login == User.Identity.Name);
-            return View(await shoppingContext.ToListAsync());
+            return View(await orders.ToListAsync());
         }
 
         // GET: Orders/Details/5
@@ -65,6 +65,7 @@ namespace TaskAuthenticationAuthorization.Controllers
         // POST: Orders/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = ShoppingContext.ADMIN_ROLE_NAME)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,OrderDate,CustomerId,SuperMarketId")] Order order)
@@ -158,6 +159,7 @@ namespace TaskAuthenticationAuthorization.Controllers
         }
 
         // POST: Orders/Delete/5
+        [Authorize(Roles = ShoppingContext.ADMIN_ROLE_NAME)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

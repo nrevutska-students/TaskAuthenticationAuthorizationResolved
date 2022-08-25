@@ -27,9 +27,10 @@ namespace TaskAuthenticationAuthorization.Controllers
                     // adding user to DB
                     user = new User
                     {
-                        Login = model.Login, 
-                        Password = model.Password, 
-                        Role = db.Roles.FirstOrDefault(role => role.Name == ShoppingContext.BUYER_ROLE_NAME)
+                        Login = model.Login,
+                        Password = model.Password,
+                        Role = db.Roles.FirstOrDefault(role => role.Name == ShoppingContext.BUYER_ROLE_NAME),
+                        BuyerType = BuyerType.Regular
                     };
                     db.Users.Add(user);
                     await db.SaveChangesAsync();
